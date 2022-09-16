@@ -24,10 +24,16 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка с id не найдена' });
+      } else {
+        res.send({ data: card });
+      }
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        res.status(400).send({ message: 'Некорректный id карточки' });
       } else {
         res.status(500).send({ message: err.message });
       }
@@ -49,7 +55,7 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id данные карточки' });
+        res.status(400).send({ message: 'Некорректный id карточки' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные карточки' });
       } else {
@@ -73,7 +79,7 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id данные карточки' });
+        res.status(400).send({ message: 'Некорректный id карточки' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные карточки' });
       } else {
