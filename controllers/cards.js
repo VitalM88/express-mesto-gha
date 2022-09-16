@@ -23,8 +23,8 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findById(req.params.cardId)
-    .then((card) => card.remove())
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Карточка не найдена' });
