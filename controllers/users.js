@@ -1,25 +1,26 @@
 const User = require('../models/user');
+const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь с id не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь с id не найден' });
       } else {
         res.send({ data: user });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректные данные пользователя' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -32,9 +33,9 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные пользователя' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -46,9 +47,9 @@ module.exports.updateUserInfo = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные пользователя' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -60,9 +61,9 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректная ссылка' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректная ссылка' });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };

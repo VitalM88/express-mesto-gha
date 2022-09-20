@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/VitalM88/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "Matveenkov V",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/VitalM88/express-mesto-gha/issues"
@@ -27,6 +27,7 @@
   "dependencies": {
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
+    "helmet": "^6.0.0",
     "mongoose": "^6.6.0"
   }
 }
