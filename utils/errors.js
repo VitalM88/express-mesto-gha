@@ -1,9 +1,13 @@
 const BAD_REQUEST = 400;
+const AUTHORIZATION_ERROR = 401;
 const NOT_FOUND = 404;
+const CONFLICT = 409;
 const SERVER_ERROR = 500;
 
 module.exports = {
   BAD_REQUEST,
+  AUTHORIZATION_ERROR,
   NOT_FOUND,
+  CONFLICT,
   SERVER_ERROR,
 };
