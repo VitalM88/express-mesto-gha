@@ -6,7 +6,7 @@ const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
 const { login, createUser } = require('./controllers/users');
 require('dotenv').config();
-//const { patternUrl } = require('./utils/patternUrl');
+// const { patternUrl } = require('./utils/patternUrl');
 
 const { PORT = 3000 } = process.env;
 
