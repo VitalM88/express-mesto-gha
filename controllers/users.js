@@ -98,13 +98,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 3600000 * 7, httpOnly: true }).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id,
-      });
+      res.send({ token });
     })
     .catch(next);
 };
