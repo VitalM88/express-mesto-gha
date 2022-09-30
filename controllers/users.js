@@ -98,19 +98,31 @@ module.exports.login = (req, res, next) => {
         NODE_ENV ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      res.cookie('jwt', token, { maxAge: 3600000 * 7, httpOnly: true }).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
+      });
     })
     .catch(next);
 };
 
-module.exports.getMe = async (req, res, next) => {
+module.exports.getMe = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
       if (!user) {
         res.status(NOT_FOUND).send({ message: 'Пользователь с id не найден' });
       } else {
-        res.send({ data: user });
+        res.send({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        });
       }
     })
     .catch((err) => {
