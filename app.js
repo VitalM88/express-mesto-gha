@@ -36,7 +36,6 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.post('/signup', createUser);
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
