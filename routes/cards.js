@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { patternUrl } = require('../utils/patternUrl');
 
 const {
   getCards,
@@ -11,8 +12,8 @@ const {
 
 router.post('/', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().min(2),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().min(2).regex(patternUrl).required(),
   }),
 }), createCard);
 router.get('/', getCards);

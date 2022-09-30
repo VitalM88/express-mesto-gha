@@ -6,7 +6,7 @@ const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
 const { login, createUser } = require('./controllers/users');
 require('dotenv').config();
-// const { patternUrl } = require('./utils/patternUrl');
+const { patternUrl } = require('./utils/patternUrl');
 
 const { PORT = 3000 } = process.env;
 
@@ -32,7 +32,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^https?:\/\/(www\.)?[a-zA-Z\d\\-]+\.[\w\-._~:\\/?#[\]@!$&'()*+,;=]+#?$/),
+    avatar: Joi.string().regex(patternUrl),
   }),
 }), createUser);
 
