@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const User = require('./user');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -22,6 +23,7 @@ const cardSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       default: [],
+      ref: User,
     },
   ],
   createdAt: {
