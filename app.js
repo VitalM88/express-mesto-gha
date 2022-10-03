@@ -7,6 +7,7 @@ const error = require('./middlewares/error');
 const { login, createUser } = require('./controllers/users');
 require('dotenv').config();
 const { patternUrl } = require('./utils/patternUrl');
+const NotFound = require('./errors/NotFound');
 
 const { PORT = 3000 } = process.env;
 
@@ -29,7 +30,7 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().regex(patternUrl),
@@ -39,8 +40,8 @@ app.post('/signup', celebrate({
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+app.use('*', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
 });
 
 app.use(errors());

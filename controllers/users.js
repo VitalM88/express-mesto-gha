@@ -2,11 +2,9 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  CONFLICT,
-} = require('../utils/errors');
+const BadRequest = require('../errors/BadRequest');
+const Conflict = require('../errors/Conflict');
+const NotFound = require('../errors/NotFound');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -18,14 +16,14 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь с id не найден' });
+        next(new NotFound('Пользователь с id не найден'));
       } else {
         res.send({ data: user });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
+        next(new BadRequest('Некорректные данные пользователя'));
       } else {
         next(err);
       }
@@ -52,9 +50,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
+        next(new BadRequest('Некорректные данные пользователя'));
       } else if (err.code === 11000) {
-        res.status(CONFLICT).send({ message: 'Даная почта уже зарегестрированна' });
+        next(new Conflict('Даная почта уже зарегестрированна'));
       } else {
         next(err);
       }
@@ -68,7 +66,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
+        next(new BadRequest('Некорректные данные пользователя'));
       } else {
         next(err);
       }
@@ -82,7 +80,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректная ссылка' });
+        next(new BadRequest('Некорректная ссылка'));
       } else {
         next(err);
       }
@@ -108,7 +106,7 @@ module.exports.getMe = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь с id не найден' });
+        next(new NotFound('Пользователь с id не найден'));
       } else {
         res.send({
           name: user.name,
@@ -121,7 +119,7 @@ module.exports.getMe = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректные данные пользователя' });
+        next(new BadRequest('Некорректные данные пользователя'));
       } else {
         next(err);
       }
